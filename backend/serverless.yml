@@ -25,6 +25,36 @@ provider:
     S3_BUCKET: serverless-image-attachments-christ-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
     AUTH0_SECRET_ID: PFYvskCLc9qfkxG_UA3LZXDpKS0wEOVRetaHYFTi84db-AuvsDZl1nHNtADBmWPL
+    IMAGES_S3_BUCKET: resize-images-christdev-${self:provider.stage}
+    THUMBNAILS_S3_BUCKET: resize-thumbnails-christdev-${self:provider.stage}
+    # Elasticsearch (eventuell löschen)
+    ELASTICSEARCH_URL:
+      Fn::GetAtt: ["ImageSearch", "DomainEndpoint"]
+    SNS_ARN_CREATE:
+      Fn::Join:
+              - ':'
+              - - arn:aws:sns
+                - Ref: AWS::Region
+                - Ref: AWS::AccountId
+                - imageCreateTopic-${self:provider.stage}
+    IMAGE_CREATE_TOPIC: imageCreateTopic-${self:provider.stage}
+    SNS_ARN_WATERMARK:
+      Fn::Join:
+              - ':'
+              - - arn:aws:sns
+                - Ref: AWS::Region
+                - Ref: AWS::AccountId
+                - imageWatermarkTopic-${self:provider.stage}
+    IMAGE_WATERMARK_TOPIC: imageWatermarkTopic-${self:provider.stage}
+    SNS_ARN_DELETE:
+      Fn::Join:
+              - ':'
+              - - arn:aws:sns
+                - Ref: AWS::Region
+                - Ref: AWS::AccountId
+                - imageDeleteTopic-${self:provider.stage}
+    IMAGE_DELETE_TOPIC: imageDeleteTopic-${self:provider.stage}
+
 
 custom:
   dynamodb:
@@ -241,6 +271,7 @@ resources:
             Projection:
               ProjectionType: ALL
 
+    # Bucket for saving uploaded images
     ImagesBucket:
       Type: AWS::S3::Bucket
       Properties:
@@ -264,6 +295,7 @@ resources:
                 - HEAD
               MaxAge: 3000
               
+    # Bucket Policy for uploading Images
     BucketPolicy:
       Type: AWS::S3::BucketPolicy
       Properties:
@@ -279,3 +311,129 @@ resources:
                 - s3:PutObject
               Resource: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*
         Bucket: !Ref ImagesBucket
+
+    
+    CreateSNSTopicPolicy:
+      Type: AWS::SNS::TopicPolicy
+      Properties:
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                AWS: "*"
+              Action: sns:Publish
+              Resource:
+                !Ref ImageTopic
+              Condition:
+                ArnLike:
+                  AWS:SourceArn: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}
+        Topics:
+          - !Ref ImageTopic
+
+    ResizedBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:provider.environment.THUMBNAILS_S3_BUCKET}
+        NotificationConfiguration:
+          TopicConfigurations:
+            - Event: s3:ObjectCreated:Put
+              Topic: !Ref ImageResizedTopic
+        CorsConfiguration:
+          CorsRules:
+            -
+              AllowedOrigins:
+                - '*'
+              AllowedHeaders:
+                - '*'
+              AllowedMethods:
+                - GET
+                - PUT
+                - POST
+                - DELETE
+                - HEAD
+              MaxAge: 3000
+
+    ResizedBucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        PolicyDocument:
+          Id: Policy
+          Version: '2012-10-17'
+          Statement:
+            - Sid: PublicReadWriteBucketPolicy
+              Effect: Allow
+              Principal: '*'
+              Action:
+                - s3:GetObject
+                - s3:PutObject
+              Resource: arn:aws:s3:::${self:provider.environment.THUMBNAILS_S3_BUCKET}/*
+        Bucket: !Ref ResizedBucket
+
+
+     UpdateSNSTopicPolicy:
+      Type: AWS::SNS::TopicPolicy
+      Properties:
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                AWS: "*"
+              Action: sns:Publish
+              Resource:
+                !Ref ImageResizedTopic
+              Condition:
+                ArnLike:
+                  AWS:SourceArn: arn:aws:s3:::${self:provider.environment.THUMBNAILS_S3_BUCKET}
+        Topics:
+          - !Ref ImageResizedTopic
+
+    ImageTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: Image bucket topic
+        TopicName: ${self:custom.topicName}
+    
+    ImageCreateTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: Image create topic
+        TopicName: ${self:provider.environment.IMAGE_CREATE_TOPIC}
+
+    ImageResizedTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: Image resize topic
+        TopicName: ${self:provider.environment.IMAGE_RESIZE_TOPIC}
+
+    ImageDeleteTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: Image deletion topic
+        TopicName: ${self:provider.environment.IMAGE_DELETE_TOPIC}
+
+    ImageSearch:
+      Type: AWS::Elasticsearch::Domain
+      Properties:
+        ElasticsearchVersion: '7.4'
+        DomainName: image-search-${self:provider.stage}
+        ElasticsearchClusterConfig:
+          DedicatedMasterEnabled: false
+          InstanceCount: '1'
+          ZoneAwarenessEnabled: false
+          InstanceType: t2.small.elasticsearch
+        EBSOptions:
+          EBSEnabled: true
+          Iops: 0
+          VolumeSize: 10
+          VolumeType: 'gp2'
+        AccessPolicies:
+          Version: '2012-10-17'
+          Statement:
+            -
+              Effect: Allow
+              Principal:
+                AWS: '*'
+              Action: 'es:*'
+              Resource: '*'    

@@ -11,6 +11,7 @@
     "browserslist": "^4.16.3",
     "caniuse-lite": "^1.0.30001197",
     "http-errors": "^1.7.2",
+    "jimp": "^0.16.1",
     "jsonwebtoken": "^8.5.1",
     "middy": "^0.27.0",
     "serverless-dynamodb-local": "^0.2.39",
