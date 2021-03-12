@@ -17,3 +17,10 @@ import { parseUserId } from "../auth/utils";
 
   return parseUserId(jwtToken)
 }
+
+export function getHeaders() {
+  return {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Credentials': true
+  }
+}

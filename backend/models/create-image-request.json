@@ -1,0 +1,22 @@
+  
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "image",
+  "type": "object",
+  "properties": {
+      "fileName": {
+          "type": "string",
+          "minLength": 0
+      },
+      "title": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 30
+      }
+  },
+  "required": [
+      "fileName",
+      "title"
+  ],
+  "additionalProperties": false
+}
