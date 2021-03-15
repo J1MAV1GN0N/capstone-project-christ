@@ -272,7 +272,7 @@ resources:
               ProjectionType: ALL
 
     # Bucket for saving uploaded images
-    ImagesBucket:
+    ImagesBucket: # == AttachmentBucket
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:provider.environment.IMAGES_S3_BUCKET}
@@ -369,25 +369,6 @@ resources:
                 - s3:PutObject
               Resource: arn:aws:s3:::${self:provider.environment.THUMBNAILS_S3_BUCKET}/*
         Bucket: !Ref ResizedBucket
-
-
-     UpdateSNSTopicPolicy:
-      Type: AWS::SNS::TopicPolicy
-      Properties:
-        PolicyDocument:
-          Version: "2012-10-17"
-          Statement:
-            - Effect: Allow
-              Principal:
-                AWS: "*"
-              Action: sns:Publish
-              Resource:
-                !Ref ImageResizedTopic
-              Condition:
-                ArnLike:
-                  AWS:SourceArn: arn:aws:s3:::${self:provider.environment.THUMBNAILS_S3_BUCKET}
-        Topics:
-          - !Ref ImageResizedTopic
 
     ImageTopic:
       Type: AWS::SNS::Topic

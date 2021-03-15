@@ -1,7 +1,7 @@
 {
-  "name": "serverless-todo-app",
+  "name": "capstone-project-serverless-christ",
   "version": "1.0.0",
-  "description": "Serverless TODO image app",
+  "description": "Serverless app to watermark images",
   "dependencies": {
     "@types/axios": "^0.14.0",
     "@types/http-errors": "^1.6.1",
