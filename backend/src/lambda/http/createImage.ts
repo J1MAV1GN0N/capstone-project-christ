@@ -23,8 +23,8 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     let imageRequest = {
       id: uuid.v4(),
       userId,
-      watermark: newImage.watermark,
-      name: newImage.name
+      name: newImage.name,
+      watermark: newImage.watermark
     }
 
     logger.info(imageRequest)
