@@ -169,10 +169,6 @@ functions:
           - "*"
       - Effect: Allow
         Action:
-          - es:*
-        Resource: "*"
-      - Effect: Allow
-        Action:
           - sns:Publish
           - sns:Subscribe
         Resource:
