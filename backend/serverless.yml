@@ -21,7 +21,8 @@ provider:
 
   environment:
     IMAGES_TABLE: serverless-image-table-${self:provider.stage}
-    INDEX_NAME: UserIdIndex
+    INDEX_ID_NAME: ImageIdIndex
+    INDEX_UI_CD_NAME: ImageUserIdCreatedDateIndex
     S3_BUCKET: serverless-image-attachments-christ-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
     AUTH0_SECRET_ID: PFYvskCLc9qfkxG_UA3LZXDpKS0wEOVRetaHYFTi84db-AuvsDZl1nHNtADBmWPL
@@ -311,7 +312,7 @@ resources:
         ValidateRequestParameters: false
     
      # Table for saving images in db
-     ImagesTable:
+    ImagesTable:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
