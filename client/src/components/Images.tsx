@@ -5,7 +5,6 @@ import * as React from 'react'
 import {
   Form,
   Button,
-  Checkbox,
   Divider,
   Grid,
   Header,
@@ -86,12 +85,12 @@ export class Images extends React.PureComponent<ImagesProps, ImagesState> {
 
     try {
       if (!this.state.file) {
-        alert('File should be selected')
+        alert('You should select a file :)')
         return
       }
 
       if (!this.state.watermark || this.state.watermark.length === 0) {
-        alert('Watermark text should not be empty')
+        alert('Watermark text can not be empty :)')
         return
       }
 
@@ -116,7 +115,7 @@ export class Images extends React.PureComponent<ImagesProps, ImagesState> {
         this.fileInputRef.current.value = ''
       }
     } catch {
-      alert('Image item creation failed')
+      alert('Image creation failed :(')
     } finally {
       this.setUploadState(UploadState.NoUpload)
     }
@@ -135,7 +134,7 @@ export class Images extends React.PureComponent<ImagesProps, ImagesState> {
         images: this.state.images.filter(image => image.id != imageId)
       })
     } catch {
-      alert('Image item deletion failed')
+      alert('Image deletion failed :(')
     }
   }
 
@@ -151,18 +150,13 @@ export class Images extends React.PureComponent<ImagesProps, ImagesState> {
         loadingImages: false
       })
     } catch (e) {
-      alert(`Failed to fetch images: ${e.message}`)
+      alert(`Failed to fetch images :( : ${e.message}`)
     }
   }
 
   render() {
     return (
       <div>
-        <Header as="h1">Search Images (with ElasticSearch)</Header>
-        <Form onSubmit={this.handleSearch}>
-          {this.renderSearch()}
-        </Form>
-
         <Header as="h1">Upload new image</Header>
         <Form onSubmit={this.handleSubmit}>
           {this.renderUploadImage()}
@@ -178,51 +172,6 @@ export class Images extends React.PureComponent<ImagesProps, ImagesState> {
     event.preventDefault()
 
     this.loadAllImages()
-  }
-
-  handleSearch = async (event: React.SyntheticEvent) => {
-    event.preventDefault()
-
-    try {
-      if (!this.state.searchKey || this.state.searchKey.length === 0) {
-        alert('Search text should not be empty')
-        return
-      }
-
-      this.state.images = await getImagesES(this.props.auth.getIdToken(), this.state.searchKey)
-
-      this.setState({
-        searchKey: ''
-      })
-    } catch {
-      alert('Search failed')
-    }
-  }
-
-  renderSearch() {
-    return (
-      <div>
-        <Form.Field>
-          <label>Search Text</label>
-          <input
-            maxLength={30}
-            value={this.state.searchKey}
-            placeholder="Search..."
-            onChange={this.handleSearchKeyChange}
-          />
-        </Form.Field>
-        <Button
-          type="submit"
-        >
-          Search
-        </Button>
-        <Button
-          onClick={this.handleAllImages}
-        >
-          Load All
-      </Button>
-      </div>
-    )
   }
 
   renderUploadImage() {
