@@ -10,6 +10,7 @@
     "axios": "^0.19.0",
     "browserslist": "^4.16.3",
     "caniuse-lite": "^1.0.30001197",
+    "core-js": "^2.6.12",
     "http-errors": "^1.7.2",
     "jimp": "^0.13.0",
     "jsonwebtoken": "^8.5.1",

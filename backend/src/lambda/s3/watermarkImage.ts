@@ -1,10 +1,10 @@
 import { SNSEvent, SNSHandler } from 'aws-lambda'
 import 'source-map-support/register'
 import * as AWS from 'aws-sdk'
-import Jimp from 'jimp/es';
 import * as AWSXRay from 'aws-xray-sdk'
 import { createLogger } from '../../utils/logger'
 import { getImage, updateUploadUrl, setProcessed } from '../../businessLayer/images';
+const Jimp = require('jimp');
 
 const XAWS = AWSXRay.captureAWS(AWS)
 
