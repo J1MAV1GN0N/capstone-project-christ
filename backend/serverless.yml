@@ -149,7 +149,7 @@ functions:
       - http:
           method: delete
           path: image/{imageId}
-          authorizer: Auth
+          authorizer: RS256Auth
           cors: true
     iamRoleStatements:
       - Effect: Allow
@@ -181,7 +181,7 @@ functions:
       - http:
           method: post
           path: image/{imageId}/file
-          authorizer: Auth
+          authorizer: RS256Auth
           cors: true
     iamRoleStatements:
       - Effect: Allow
