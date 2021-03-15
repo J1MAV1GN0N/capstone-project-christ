@@ -366,14 +366,14 @@ resources:
         Topics:
           - !Ref ImageTopic
 
-    ResizedBucket:
+    WatermarkBucket:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:provider.environment.THUMBNAILS_S3_BUCKET}
         NotificationConfiguration:
           TopicConfigurations:
             - Event: s3:ObjectCreated:Put
-              Topic: !Ref ImageResizedTopic
+              Topic: !Ref ImageWatermarkTopic
         CorsConfiguration:
           CorsRules:
             -
@@ -403,7 +403,7 @@ resources:
                 - s3:GetObject
                 - s3:PutObject
               Resource: arn:aws:s3:::${self:provider.environment.THUMBNAILS_S3_BUCKET}/*
-        Bucket: !Ref ResizedBucket
+        Bucket: !Ref WatermarkBucket
 
     UpdateSNSTopicPolicy:
       Type: AWS::SNS::TopicPolicy
@@ -416,10 +416,10 @@ resources:
                 AWS: "*"
               Action: sns:Publish
               Resource:
-                !Ref ImageResizedTopic
+                !Ref ImageWatermarkTopic
               Condition:
                 ArnLike:
                   AWS:SourceArn: arn:aws:s3:::${self:provider.environment.THUMBNAILS_S3_BUCKET}
         Topics:
-          - !Ref ImageResizedTopic
+          - !Ref ImageWatermarkTopic
     
