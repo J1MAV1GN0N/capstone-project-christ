@@ -55,6 +55,7 @@ provider:
 
 
 custom:
+  topicName: imageTopic-${self:provider.stage}
   dynamodb:
     start:
       inMemory: true
