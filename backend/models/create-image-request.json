@@ -4,19 +4,19 @@
   "title": "image",
   "type": "object",
   "properties": {
-      "fileName": {
+      "name": {
           "type": "string",
           "minLength": 0
       },
-      "title": {
+      "watermark": {
           "type": "string",
           "minLength": 0,
           "maxLength": 30
       }
   },
   "required": [
-      "fileName",
-      "title"
+      "name",
+      "watermark"
   ],
   "additionalProperties": false
 }
