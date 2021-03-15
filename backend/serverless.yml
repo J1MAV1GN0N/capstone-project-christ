@@ -247,47 +247,6 @@ functions:
           - s3:GetObjectTagging
         Resource: arn:aws:s3:::${self:provider.environment.THUMBNAILS_S3_BUCKET}/*
 
-  
-  ImageCreateDoc:
-    handler: src/lambda/sns/imageCreateSubscriber.handler
-    events:
-      - sns:
-          arn: !Ref ImageCreateTopic
-          topicName: ${self:provider.environment.IMAGE_CREATE_TOPIC}
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - xray:PutTraceSegments
-        Resource:
-          - "*"  
-
-  ImageUpdateDoc:
-    handler: src/lambda/sns/imageUpdateSubscriber.handler
-    events:
-      - sns:
-          arn: !Ref ImageWatermarkTopic
-          topicName: ${self:provider.environment.IMAGE_WATERMARK_TOPIC}
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - xray:PutTraceSegments
-        Resource:
-          - "*"
-
-  ImageDeleteDoc:
-    handler: src/lambda/sns/imageDeleteSubscriber.handler
-    events:
-      - sns:
-          arn: !Ref ImageDeleteTopic
-          topicName: ${self:provider.environment.IMAGE_DELETE_TOPIC}
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - xray:PutTraceSegments
-        Resource:
-          - "*"          
-
-
 resources:
   Resources:
     GatewayResponseDefault4XX:
@@ -449,7 +408,7 @@ resources:
               Resource: arn:aws:s3:::${self:provider.environment.THUMBNAILS_S3_BUCKET}/*
         Bucket: !Ref ResizedBucket
 
-     UpdateSNSTopicPolicy:
+    UpdateSNSTopicPolicy:
       Type: AWS::SNS::TopicPolicy
       Properties:
         PolicyDocument:
@@ -466,30 +425,4 @@ resources:
                   AWS:SourceArn: arn:aws:s3:::${self:provider.environment.THUMBNAILS_S3_BUCKET}
         Topics:
           - !Ref ImageResizedTopic
-
-  	# SNS Topics
-    ImageTopic:
-      Type: AWS::SNS::Topic
-      Properties:
-        DisplayName: Image bucket topic
-        TopicName: ${self:custom.topicName}
-    
-    ImageCreateTopic:
-      Type: AWS::SNS::Topic
-      Properties:
-        DisplayName: Image create topic
-        TopicName: ${self:provider.environment.IMAGE_CREATE_TOPIC}
-
-    ImageResizedTopic:
-      Type: AWS::SNS::Topic
-      Properties:
-        DisplayName: Image resize topic
-        TopicName: ${self:provider.environment.IMAGE_RESIZE_TOPIC}
-
-    ImageDeleteTopic:
-      Type: AWS::SNS::Topic
-      Properties:
-        DisplayName: Image deletion topic
-        TopicName: ${self:provider.environment.IMAGE_DELETE_TOPIC}
-
     

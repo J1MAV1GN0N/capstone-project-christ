@@ -2,9 +2,9 @@ import { SNSEvent, SNSHandler } from 'aws-lambda'
 import 'source-map-support/register'
 import * as AWS from 'aws-sdk'
 import * as AWSXRay from 'aws-xray-sdk'
-import Jimp from 'jimp/es'
 import { createLogger } from '../../utils/logger'
 import { getImage, updateUploadUrl, setProcessed } from '../../businessLayer/images';
+import Jimp from 'jimp/es';
 
 const XAWS = AWSXRay.captureAWS(AWS)
 
