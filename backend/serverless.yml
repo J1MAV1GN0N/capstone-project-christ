@@ -393,28 +393,3 @@ resources:
       Properties:
         DisplayName: Image deletion topic
         TopicName: ${self:provider.environment.IMAGE_DELETE_TOPIC}
-
-    ImageSearch:
-      Type: AWS::Elasticsearch::Domain
-      Properties:
-        ElasticsearchVersion: '7.4'
-        DomainName: image-search-${self:provider.stage}
-        ElasticsearchClusterConfig:
-          DedicatedMasterEnabled: false
-          InstanceCount: '1'
-          ZoneAwarenessEnabled: false
-          InstanceType: t2.small.elasticsearch
-        EBSOptions:
-          EBSEnabled: true
-          Iops: 0
-          VolumeSize: 10
-          VolumeType: 'gp2'
-        AccessPolicies:
-          Version: '2012-10-17'
-          Statement:
-            -
-              Effect: Allow
-              Principal:
-                AWS: '*'
-              Action: 'es:*'
-              Resource: '*'    
