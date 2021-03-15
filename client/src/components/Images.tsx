@@ -9,16 +9,13 @@ import {
   Grid,
   Header,
   Icon,
-  Input,
   Image,
   Loader
 } from 'semantic-ui-react'
-import { Link, Route, Router, Switch } from 'react-router-dom'
 
-import { createImage, deleteImage, getImages, getUploadUrl, uploadFile, getImagesES } from '../api/images-api'
+import { createImage, deleteImage, getImages, getUploadUrl, uploadFile } from '../api/images-api'
 import Auth from '../auth/Auth'
 import { ImageItem } from '../types/ImageItem'
-import { threadId } from 'worker_threads'
 
 enum UploadState {
   NoUpload,
@@ -37,7 +34,6 @@ interface ImagesState {
   name: string
   watermark: string
   uploadState: UploadState,
-  searchKey: string
 }
 
 export class Images extends React.PureComponent<ImagesProps, ImagesState> {
@@ -48,7 +44,6 @@ export class Images extends React.PureComponent<ImagesProps, ImagesState> {
     name: '',
     watermark: '',
     uploadState: UploadState.NoUpload,
-    searchKey: ''
   }
 
   fileInputRef: React.RefObject<HTMLInputElement>
@@ -74,10 +69,6 @@ export class Images extends React.PureComponent<ImagesProps, ImagesState> {
       file: files[0],
       name: files[0].name
     })
-  }
-
-  handleSearchKeyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ searchKey: event.target.value })
   }
 
   handleSubmit = async (event: React.SyntheticEvent) => {
