@@ -1,4 +1,4 @@
-export interface CreateTodoRequest {
+export interface CreateImageRequest {
   name: string
-  dueDate: string
+  watermark: string
 }

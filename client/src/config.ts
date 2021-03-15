@@ -1,4 +1,4 @@
-const apiId = '' // Used RS256 to authenticate user
+const apiId = ''
 export const apiEndpoint = `https://${apiId}.execute-api.eu-central-1.amazonaws.com/dev`
 
 export const authConfig = {
