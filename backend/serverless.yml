@@ -208,6 +208,85 @@ functions:
         Resource:
           - "*"
 
+  ImageWatermark:
+    handler: src/lambda/s3/watermarkImage.handler
+    events:
+      - sns:
+          arn:
+            Fn::Join:
+              - ':'
+              - - arn:aws:sns
+                - Ref: AWS::Region
+                - Ref: AWS::AccountId
+                - ${self:custom.topicName}
+          topicName: ${self:custom.topicName}
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:UpdateItem
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.IMAGES_TABLE}
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:UpdateItem
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.IMAGES_TABLE}/*
+      - Effect: Allow
+        Action:
+          - xray:PutTraceSegments
+        Resource:
+          - "*"
+      - Effect: Allow
+        Action:
+          - s3:PutObject
+          - s3:GetObject
+          - s3:PutObjectTagging
+          - s3:GetObjectTagging
+        Resource: arn:aws:s3:::${self:provider.environment.THUMBNAILS_S3_BUCKET}/*
+
+  
+  ImageCreateDoc:
+    handler: src/lambda/sns/imageCreateSubscriber.handler
+    events:
+      - sns:
+          arn: !Ref ImageCreateTopic
+          topicName: ${self:provider.environment.IMAGE_CREATE_TOPIC}
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - xray:PutTraceSegments
+        Resource:
+          - "*"  
+
+  ImageUpdateDoc:
+    handler: src/lambda/sns/imageUpdateSubscriber.handler
+    events:
+      - sns:
+          arn: !Ref ImageWatermarkTopic
+          topicName: ${self:provider.environment.IMAGE_WATERMARK_TOPIC}
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - xray:PutTraceSegments
+        Resource:
+          - "*"
+
+  ImageDeleteDoc:
+    handler: src/lambda/sns/imageDeleteSubscriber.handler
+    events:
+      - sns:
+          arn: !Ref ImageDeleteTopic
+          topicName: ${self:provider.environment.IMAGE_DELETE_TOPIC}
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - xray:PutTraceSegments
+        Resource:
+          - "*"          
+
+
 resources:
   Resources:
     GatewayResponseDefault4XX:
@@ -231,7 +310,9 @@ resources:
         ValidateRequestBody: true
         ValidateRequestParameters: false
     
-    Type: AWS::DynamoDB::Table
+     # Table for saving images in db
+     ImagesTable:
+      Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
           - AttributeName: id
@@ -351,7 +432,7 @@ resources:
                 - HEAD
               MaxAge: 3000
 
-    ResizedBucketPolicy:
+    ResizedBucketPolicy: # Bucket with resized and watermarked images
       Type: AWS::S3::BucketPolicy
       Properties:
         PolicyDocument:
@@ -367,6 +448,25 @@ resources:
               Resource: arn:aws:s3:::${self:provider.environment.THUMBNAILS_S3_BUCKET}/*
         Bucket: !Ref ResizedBucket
 
+     UpdateSNSTopicPolicy:
+      Type: AWS::SNS::TopicPolicy
+      Properties:
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                AWS: "*"
+              Action: sns:Publish
+              Resource:
+                !Ref ImageResizedTopic
+              Condition:
+                ArnLike:
+                  AWS:SourceArn: arn:aws:s3:::${self:provider.environment.THUMBNAILS_S3_BUCKET}
+        Topics:
+          - !Ref ImageResizedTopic
+
+  	# SNS Topics
     ImageTopic:
       Type: AWS::SNS::Topic
       Properties:
@@ -390,3 +490,5 @@ resources:
       Properties:
         DisplayName: Image deletion topic
         TopicName: ${self:provider.environment.IMAGE_DELETE_TOPIC}
+
+    
