@@ -22,7 +22,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   const signedUrl = s3.getSignedUrl('putObject', {
     Bucket: bucketName,
     Key: imageId,
-    Expires: urlExpiration,
+    Expires: parseInt(urlExpiration),
     Metadata: { watermark: watermark },
   })
 
