@@ -389,7 +389,7 @@ resources:
                 - HEAD
               MaxAge: 3000
 
-    ResizedBucketPolicy: # Bucket with resized and watermarked images
+    WatermarkBucketPolicy: # Bucket with resized and watermarked images
       Type: AWS::S3::BucketPolicy
       Properties:
         PolicyDocument:
@@ -422,4 +422,28 @@ resources:
                   AWS:SourceArn: arn:aws:s3:::${self:provider.environment.THUMBNAILS_S3_BUCKET}
         Topics:
           - !Ref ImageWatermarkTopic
+
+    ImageTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: Image bucket topic
+        TopicName: ${self:custom.topicName}
+        
+    ImageCreateTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: Image create topic
+        TopicName: ${self:provider.environment.IMAGE_CREATE_TOPIC}
+
+    ImageWatermarkTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: Image watermark topic
+        TopicName: ${self:provider.environment.IMAGE_WATERMARK_TOPIC}
+    
+    ImageDeleteTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: Image deletion topic
+        TopicName: ${self:provider.environment.IMAGE_DELETE_TOPIC}    
     
