@@ -1,10 +1,10 @@
 import { SNSEvent, SNSHandler } from 'aws-lambda'
 import 'source-map-support/register'
 import * as AWS from 'aws-sdk'
+import Jimp from 'jimp/es';
 import * as AWSXRay from 'aws-xray-sdk'
 import { createLogger } from '../../utils/logger'
 import { getImage, updateUploadUrl, setProcessed } from '../../businessLayer/images';
-import Jimp from 'jimp/es';
 
 const XAWS = AWSXRay.captureAWS(AWS)
 
@@ -50,10 +50,10 @@ async function processImage(record) {
 
   const font = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE)
 
-  const maxWidth = image.getWidth() - 20 //image width - 10px margin left - 10px margin right
-  const maxHeight = 15 + 20 //logo height + margin
+  const maxWidth = image.getWidth() - 20 // image width - 10px margin left - 10px margin right
+  const maxHeight = 15 + 20 // logo height + margin
   const placementX = 10 // 10px in on the x axis
-  const placementY = image.getHeight() - (15 + 20) - 10 //bottom of the image: height - maxHeight - margin 
+  const placementY = image.getHeight() - (15 + 20) - 10 // bottom of the image: height - maxHeight - margin 
   logger.info(`Image watermark parameters\n maxWidth: ${maxWidth}, maxHeight: ${maxHeight}, ` + `placementX: ${placementX}, placementY: ${placementY}`)
 
   let textData = {
