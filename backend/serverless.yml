@@ -27,9 +27,6 @@ provider:
     AUTH0_SECRET_ID: PFYvskCLc9qfkxG_UA3LZXDpKS0wEOVRetaHYFTi84db-AuvsDZl1nHNtADBmWPL
     IMAGES_S3_BUCKET: resize-images-christdev-${self:provider.stage}
     THUMBNAILS_S3_BUCKET: resize-thumbnails-christdev-${self:provider.stage}
-    # Elasticsearch (eventuell löschen)
-    ELASTICSEARCH_URL:
-      Fn::GetAtt: ["ImageSearch", "DomainEndpoint"]
     SNS_ARN_CREATE:
       Fn::Join:
               - ':'
@@ -69,11 +66,11 @@ custom:
       info:
         version: v1.0.0
         title: Todo API
-        description: Serverless application for sharing todos
+        description: Serverless application for uploading and watermarking images
     models:
-      - name: TodoRequest
+      - name: CreateImageRequest
         contentType: application/json
-        schema: ${file(models/create-todo-request.json)}
+        schema: ${file(models/create-image-request.json)}
 
 functions:
 
