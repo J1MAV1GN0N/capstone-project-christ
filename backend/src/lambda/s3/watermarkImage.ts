@@ -42,7 +42,7 @@ async function processImage(record) {
 
   const watermark = response.Metadata['watermark']
 
-  const body = response.Body as Buffer // as String?
+  const body = response.Body
   const image = await Jimp.read(body)
 
   // Resizing image
