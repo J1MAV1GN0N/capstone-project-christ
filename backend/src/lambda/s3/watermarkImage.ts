@@ -1,7 +1,7 @@
 import { SNSEvent, SNSHandler } from 'aws-lambda'
 import 'source-map-support/register'
 import * as AWS from 'aws-sdk'
-import Jimp from 'jimp';
+import * as Jimp from "jimp";
 import * as AWSXRay from 'aws-xray-sdk'
 import { createLogger } from '../../utils/logger'
 import { getImage, updateUploadUrl, setProcessed } from '../../businessLayer/images';
@@ -14,7 +14,6 @@ const imagesBucketName = process.env.IMAGES_S3_BUCKET
 const thumbnailBucketName = process.env.THUMBNAILS_S3_BUCKET
 
 const logger = createLogger('image-watermark')
-
 
 export const handler: SNSHandler = async (event: SNSEvent) => {
   console.log('Processing SNS event ', JSON.stringify(event))
