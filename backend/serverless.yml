@@ -26,7 +26,7 @@ provider:
     INDEX_ID_NAME: ImageIdIndex
     INDEX_UI_CD_NAME: ImageUserIdCreatedDateIndex
     S3_BUCKET: serverless-image-attachments-christ-${self:provider.stage}
-    SIGNED_URL_EXPIRATION: 300
+    SIGNED_URL_EXPIRATION: 600
     AUTH0_SECRET_ID: PFYvskCLc9qfkxG_UA3LZXDpKS0wEOVRetaHYFTi84db-AuvsDZl1nHNtADBmWPL
     IMAGES_S3_BUCKET: resize-images-christdev-${self:provider.stage}
     THUMBNAILS_S3_BUCKET: resize-thumbnails-christdev-${self:provider.stage}
