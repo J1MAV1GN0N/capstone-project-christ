@@ -7,6 +7,8 @@ plugins:
   - serverless-reqvalidator-plugin
   - serverless-plugin-canary-deployments
   - serverless-plugin-tracing
+  - serverless-offline
+  - serverless-dynamodb-local
 
 provider:
   tracing:
@@ -55,6 +57,8 @@ provider:
 
 
 custom:
+  serverless-offline:
+    port: 3003
   topicName: imageTopic-${self:provider.stage}
   dynamodb:
     start:
