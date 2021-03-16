@@ -24,18 +24,18 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{apiId}}.execute-api.us-east-1.amazonaws.com/dev/todos",
+							"raw": "https://{{apiId}}.execute-api.eu-central-1.amazonaws.com/dev/images",
 							"protocol": "https",
 							"host": [
 								"{{apiId}}",
 								"execute-api",
-								"us-east-1",
+								"eu-central-1",
 								"amazonaws",
 								"com"
 							],
 							"path": [
 								"dev",
-								"todos"
+								"images"
 							]
 						}
 					},

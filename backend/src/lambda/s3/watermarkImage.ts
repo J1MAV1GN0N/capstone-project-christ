@@ -1,10 +1,10 @@
 import { SNSEvent, SNSHandler } from 'aws-lambda'
 import 'source-map-support/register'
 import * as AWS from 'aws-sdk'
+import Jimp from 'jimp';
 import * as AWSXRay from 'aws-xray-sdk'
 import { createLogger } from '../../utils/logger'
 import { getImage, updateUploadUrl, setProcessed } from '../../businessLayer/images';
-const Jimp = require('jimp');
 
 const XAWS = AWSXRay.captureAWS(AWS)
 
@@ -44,6 +44,7 @@ async function processImage(record) {
 
   const body = response.Body as Buffer
   const image = await Jimp.read(body)
+  console.log(image)
 
   // Resizing image
   image.resize(512, Jimp.AUTO)
