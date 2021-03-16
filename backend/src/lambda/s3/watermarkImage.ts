@@ -44,7 +44,6 @@ async function processImage(record) {
 
   const body = response.Body as Buffer // as String?
   const image = await Jimp.read(body)
-  console.log(image)
 
   // Resizing image
   image.resize(512, Jimp.AUTO)
