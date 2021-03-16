@@ -6,7 +6,6 @@ import { getImage, updateUploadUrl, setProcessed } from '../../businessLayer/ima
 import * as AWSXRay from 'aws-xray-sdk';
 import * as Jimp from 'jimp';
 
-
 const XAWS = AWSXRay.captureAWS(AWS)
 
 const s3 = new XAWS.S3()
@@ -42,7 +41,7 @@ async function processImage(record) {
 
   const watermark = response.Metadata['watermark']
 
-  const body = response.Body
+  const body = response.Body as Buffer
   const image = await Jimp.read(body)
 
   // Resizing image
