@@ -9,7 +9,6 @@ import * as Jimp from 'jimp';
 const XAWS = AWSXRay.captureAWS(AWS)
 
 const s3 = new XAWS.S3()
-
 const imagesBucketName = process.env.IMAGES_S3_BUCKET
 const thumbnailBucketName = process.env.THUMBNAILS_S3_BUCKET
 
@@ -40,8 +39,8 @@ async function processImage(record) {
       .promise()
 
   const watermark = response.Metadata['watermark']
-
-  const body = response.Body as Buffer
+  console.log('Moin Meista')
+  const body = response.Body
   const image = await Jimp.read(body)
 
   // Resizing image
