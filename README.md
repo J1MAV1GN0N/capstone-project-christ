@@ -1,6 +1,6 @@
 # Capstone Project Christ
 
-# Functionality of the application
+## Functionality of the application
 
 This application will allow creating/removing/updating/fetching image items and watermark them. Each user only has access to image items that he/she has created.
 
