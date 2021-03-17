@@ -2,7 +2,7 @@ import { SNSEvent, SNSHandler } from 'aws-lambda';
 import 'source-map-support/register';
 import * as AWS from 'aws-sdk';
 import { createLogger } from '../../utils/logger';
-import { getImage, updateUploadUrl, setProcessed } from '../../businessLayer/images';
+import { getImage, updateUploadUrl, setProcessed } from '../../businessLayer/images'; // Diese drei direkt in Business Layer auslagern
 import * as AWSXRay from 'aws-xray-sdk';
 import * as Jimp from 'jimp';
 
